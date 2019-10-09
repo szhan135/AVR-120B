@@ -48,6 +48,12 @@ continue 2
 expectPORTB 0x00
 checkResult
 
+test "PIND:0x02 PINB:0x01 => PORTB: 0x04"
+setPIND 0x02
+setPINB 0x01
+continue 2
+expectPORTB 0x04
+checkResult
 
 test "PIND:0xFF PINB:0x00 => PORTB: 0x02"
 setPIND 0xFF
