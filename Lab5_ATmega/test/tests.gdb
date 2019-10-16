@@ -29,46 +29,88 @@ echo Running all tests..."\n\n
 # Example test:
 
 # Add tests below
-test "PINA:0x00 => PORTC: 0x40"
-setPINA 0x00
+test "PINA: 0x00=> PORTC: 0x00, state: INIT"
+set state = INIT
+setPINA 0xFF
 continue 2
-expectPORTC 0x40
+setPINA 0xFF
+continue 2
+setPINA 0xFF
+continue 2
+setPINA 0xFF
+continue 2
+expectPORTC 0x00
+expect state RESET
 checkResult
 
-test "PINA:0x02 => PORTC: 0x60"
-setPINA 0x01
+test "PINA: 0x01, 0x01, 0x01, 0x01 => PORTC: 0x03, state: WAIT"
+set state = INIT
+setPINA 0xFE
 continue 2
-expectPORTC 0x60
+setPINA 0xFE
+continue 2
+setPINA 0xFE
+continue 2
+setPINA 0xFE
+continue 2
+expectPORTC 0x03
+expect state WAIT
 checkResult
 
-test "PINA:0x03 => PORTC: 0x70"
-setPINA 0x03
+test "PINA: 0x01, 0x02, 0x01, 0x02 => PORTC: 0x07, state: WAIT"
+set state = INIT
+setPINA 0xFE
 continue 2
-expectPORTC 0x70
+setPINA 0xFD
+continue 2
+setPINA 0xFE
+continue 2
+setPINA 0xFD
+continue 2
+expectPORTC 0x07
+expect state WAIT
 checkResult
 
-test "PINA:0x05 => PORTC: 0x38"
-setPINA 0x05
+test "PINA: 0x02, 0x02, 0x02, 0x02 => PORTC: 0x09, state: WAIT"
+set state = INIT
+setPINA 0xFD
 continue 2
-expectPORTC 0x38
+setPINA 0xFD
+continue 2
+setPINA 0xFD
+continue 2
+setPINA 0xFD
+continue 2
+expectPORTC 0x09
+expect state WAIT
 checkResult
 
-test "PINA:0x07 => PORTC: 0x3C"
-setPINA 0x07
+test "PINA: 0x03, 0x03, 0x03, 0x03 => PORTC: 0x07, state: RESET"
+set state = INIT
+setPINA 0xFC
 continue 2
-expectPORTC 0x3C
+setPINA 0xFC
+continue 2
+setPINA 0xFC
+continue 2
+setPINA 0xFC
+continue 2
+expectPORTC 0x07
+expect state INIT
 checkResult
 
-test "PINA:0x0A => PORTC: 0x3E"
-setPINA 0x0A
+test "PINA: 0x01, 0x02, 0x02, 0x03 => PORTC: 0x08, state: RESET"
+set state = INIT
+setPINA 0xFE
 continue 2
-expectPORTC 0x3E
-checkResult
-
-test "PINA:0x0D => PORTC: 0x3F"
-setPINA 0x0D
+setPINA 0xFD
 continue 2
-expectPORTC 0x3F
+setPINA 0xFD
+continue 2
+setPINA 0xFC
+continue 2
+expectPORTC 0x08
+expect state WAIT
 checkResult
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed
