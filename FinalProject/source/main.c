@@ -11,7 +11,7 @@
 #include "scheduler.h"
 #include <avr/eeprom.h>	
 #include "keypad.h"
-#include "customer.c"
+#include "user.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

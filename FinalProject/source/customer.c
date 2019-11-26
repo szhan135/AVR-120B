@@ -2,6 +2,7 @@
 #include <avr/io.h>		/* Include AVR std. library file */
 #include <util/delay.h>		/* Include inbuilt defined Delay header file */
 #include <avr/interrupt.h>
+//#include <user.h>
 //****************************************时间
 volatile unsigned char TimerFlag = 0;
 unsigned long _avr_timer_M = 1; // Start count from here, down to 0. Default 1 ms.
