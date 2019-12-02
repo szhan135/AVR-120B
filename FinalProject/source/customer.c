@@ -2,9 +2,9 @@
 #include <avr/io.h>		/* Include AVR std. library file */
 #include <util/delay.h>		/* Include inbuilt defined Delay header file */
 #include <avr/interrupt.h>
-//#include <user.h>
+#include <user.h>
 //****************************************时间
-volatile unsigned char TimerFlag = 0;
+//volatile unsigned char TimerFlag = 0;
 unsigned long _avr_timer_M = 1; // Start count from here, down to 0. Default 1 ms.
 unsigned long _avr_timer_cntcurr = 0; // Current internal count of 1ms ticks
 
@@ -127,9 +127,9 @@ void LCD_Cursor(unsigned char column) {
 }
 //****************************************
 	unsigned char level = 2;
-	unsigned char dowm[8] = { 0x4,0xa,0x11,0x11,0x11,0x11,0xa,0x4}; 
+	/*unsigned char dowm[8] = { 0x4,0xa,0x11,0x11,0x11,0x11,0xa,0x4}; 
 	unsigned char up[8] = {0x4,0xa,0x4,0x15,0xe,0x4,0xa,0x11};
-	unsigned char jump[8] = {0x4,0xa,0x4,0x4,0x1f,0x4,0x1b,0x0};
+	unsigned char jump[8] = {0x4,0xa,0x4,0x4,0x1f,0x4,0x1b,0x0};*/
 	unsigned char x=17;
 	unsigned char lose=0;
 	unsigned char direbut;
