@@ -283,12 +283,12 @@ void PWM_init() {
 	TCCR3A = 0x00;
 	TCCR3B = 0x00;
 }
+//Get joy stick to work
 
 void ADC_init() {
 	ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADATE);
 }
 unsigned short adc_x;
- 
 unsigned char showingpo[5]={1,2,17,25,35};
 unsigned char showingpo_temp[5]={1,2,17,25,35};
 unsigned char trackingpo[5]={16,16,16,16,16};
@@ -369,9 +369,6 @@ int music_tick(int state){
 			
 			break;
 		case music_play:
-			/*music_transfer();
-			music_i++;
-			if(music_i==8){music_i = 0;}*/
 				set_PWM(0);
 				if(adc_x >= 950 && input_hold == 'A'){set_PWM(329.63);}
 				else if(adc_x <= 50 && input_hold == 'A'){set_PWM(5232.5);}
@@ -386,7 +383,7 @@ int music_tick(int state){
 }	
 //**************
 unsigned char highestscore;
-enum score_state{scoreinit};
+enum score_state{scoreinit}; //Memeory of scores
 int score_tick(int state){	
 	eeprom_write_byte((uint8_t*)1,showuptime);
 	score_time = eeprom_read_byte((uint8_t*)1);
@@ -460,6 +457,7 @@ int getinput_tick(int state){
 				else if(press == 4){input_hold = 'D';}
 				
 			}
+			//ADC_init();
 			adc_x= ADC;
 			if(adc_x >= 950){up_dowm = 2;}
 			if(adc_x <= 50){up_dowm = 1;}
@@ -589,7 +587,7 @@ int main(void) {
 	static task task1,task2,task3,task4,task5,task6;
 	task *tasks[] = {&task1,&task2,&task3,&task4,&task5,&task6};
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
-		
+	//All tasks here 	
 	task1.state = init;//Task initial state
 	task1.period = 70;//Task Period
 	task1.elapsedTime = task1.period;//Task current elapsed time.
@@ -620,7 +618,7 @@ int main(void) {
 	task6.elapsedTime = task6.period;//Task current elapsed time.
 	task6.TickFct = &music_tick;//Function pointer for the tick	
 	
-	TimerSet(1);
+	TimerSet(5);
 	TimerOn();
 
 	unsigned short i;//Scheduler for-loop iterator
@@ -629,7 +627,7 @@ int main(void) {
 		reset_eeprom = ~PINA & 0x08;
 		if(reset_eeprom ){eeprom_write_byte((uint8_t*)2,1);}
 		ADC_init();
-		
+		//adc_x= ADC;
 		for(i = 0; i < numTasks; i++){//Scheduler code
 			if(tasks[i]->elapsedTime == tasks[i]->period){//Task is ready to tick
 				tasks[i]->state= tasks[i]->TickFct(tasks[i]->state);//set next state
