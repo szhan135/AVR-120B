@@ -459,8 +459,9 @@ int getinput_tick(int state){
 			}
 			//ADC_init();
 			adc_x= ADC;
-			if(adc_x >= 950){up_dowm = 2;}
-			if(adc_x <= 50){up_dowm = 1;}
+			if(adc_x > 50 && adc_x < 950){up_dowm = 0;}
+			else if(adc_x > 950){up_dowm = 2;}
+			else if(adc_x < 50){up_dowm = 1;}
 			else{state = getinit;}break;
 		case getpress:
 			if(press){state = getpress;}
@@ -589,36 +590,36 @@ int main(void) {
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	//All tasks here 	
 	task1.state = init;//Task initial state
-	task1.period = 70;//Task Period
+	task1.period = 70;//Task Period //100 orign:70
 	task1.elapsedTime = task1.period;//Task current elapsed time.
 	task1.TickFct = &display1;//Function pointer for the tick
 
 	task2.state = getinit;//Task initial state
-	task2.period = 1;//Task Period
+	task2.period = 1;//Task Period //25 /1
 	task2.elapsedTime = task2.period;//Task current elapsed time.
 	task2.TickFct = &getinput_tick;//Function pointer for the tick
 
 	task3.state = menu;//Task initial state
-	task3.period = 70;//Task Period
+	task3.period = 70;//Task Period /100 /70
 	task3.elapsedTime = task3.period;//Task current elapsed time.
 	task3.TickFct = &menu_tick;//Function pointer for the tick
 
 	task4.state = playerstart;//Task initial state
-	task4.period = 70;//Task Period
+	task4.period = 70;//Task Period //100/70
 	task4.elapsedTime = task4.period;//Task current elapsed time.
 	task4.TickFct = &player_tick;//Function pointer for the tick	
 	
 	task5.state = scoreinit;//Task initial state
-	task5.period = 20;//Task Period
+	task5.period = 20;//Task Period 25/20
 	task5.elapsedTime = task5.period;//Task current elapsed time.
 	task5.TickFct = &score_tick;//Function pointer for the tick
 
 	task6.state = music_menu;//Task initial state
-	task6.period = 30;//Task Period
+	task6.period = 30;//Task Period 50/30
 	task6.elapsedTime = task6.period;//Task current elapsed time.
 	task6.TickFct = &music_tick;//Function pointer for the tick	
 	
-	TimerSet(5);
+	TimerSet(2);
 	TimerOn();
 
 	unsigned short i;//Scheduler for-loop iterator
@@ -627,7 +628,10 @@ int main(void) {
 		reset_eeprom = ~PINA & 0x08;
 		if(reset_eeprom ){eeprom_write_byte((uint8_t*)2,1);}
 		ADC_init();
-		//adc_x= ADC;
+		adc_x= ADC;
+		if(adc_x > 50 && adc_x < 950){PORTB = 0x00;}
+		else if(adc_x > 950){PORTB = 0x01;}
+		else if(adc_x < 50){PORTB = 0x02;}
 		for(i = 0; i < numTasks; i++){//Scheduler code
 			if(tasks[i]->elapsedTime == tasks[i]->period){//Task is ready to tick
 				tasks[i]->state= tasks[i]->TickFct(tasks[i]->state);//set next state
